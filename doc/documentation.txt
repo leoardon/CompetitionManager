@@ -21,3 +21,7 @@ Tableau:
 	
 - quand j'ai fini la liste des combats je la recalcule jusqu'à ce que la finale soit faite
 - 1ere iteration sans repechage
+
+pour le tirage:
+- vérification sur le club, sur le département, sur la région, sur le classement
+-preclassement par club puis par départ puis par region

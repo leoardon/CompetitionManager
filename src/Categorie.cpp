@@ -10,6 +10,9 @@
 
 /////////////////////////////////////////////////////////////////  INCLUDE
 //-------------------------------------------------------- Include système
+#include <vector>
+#include <map>
+#include <math.h>
 #include <iostream>
 using namespace std;
 
@@ -49,7 +52,7 @@ Categorie::Categorie(string unPoids, tSexe unSexe, tAge unAge): poids(unPoids), 
 } //----- fin de Constructeur
 
 
-void Categorie::Print()
+void Categorie::PrintCombattants()
 {
     cout << "Categorie des " << poids << ": " << endl;
     list<Participant*>::iterator it;
@@ -60,24 +63,269 @@ void Categorie::Print()
     }
 }
 
-void Categorie::addParticipant(Participant *unParticipant)
+void Categorie::PrintTableau()
+{
+    vector<Participant*>::iterator it;
+    for(it=tableau->begin(); it!= tableau->end(); it++)
+    {
+        cout << "_______________" << endl;
+        if((*it)!= NULL)
+            cout << (*it)->GetNom() << "|" << endl;
+        else
+            cout << "               |" << endl;
+        cout << "_______________" << endl;
+    }
+}
+
+
+void Categorie::trier()
+{
+    list<Participant*> *listeTriee = new list<Participant*>(); 
+    list<Participant*>::iterator it;
+    map<string, map<string, map< string, map<string, map<string, vector<Participant*>*> > > > > mapTri;
+    map<string, vector<Participant*>*> mapClub;
+
+    for(it = combattants->begin(); it != combattants->end(); it++)
+    {
+        if(mapTri.find((*it)->GetPays()) == mapTri.end() || mapTri[(*it)->GetPays()].find((*it)->GetZone()) == mapTri[(*it)->GetPays()].end()
+           || ((mapTri[(*it)->GetPays()])[(*it)->GetZone()]).find((*it)->GetRegion()) == ((mapTri[(*it)->GetPays()])[(*it)->GetZone()]).end()
+           || (((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()]).find((*it)->GetDepartement()) == (((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()]).end()
+           || ((((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()])[(*it)->GetDepartement()]).find((*it)->GetClub()) == ((((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()])[(*it)->GetDepartement()]).end())
+        {
+            (((((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()])[(*it)->GetDepartement()])[(*it)->GetClub()]) = new vector<Participant*>();
+        }
+        (((((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()])[(*it)->GetDepartement()])[(*it)->GetClub()])->push_back(*it);
+    }
+    
+    map<string, map<string, map< string, map<string, map<string, vector<Participant*>*> > > > > ::iterator itMapPays;
+    map<string, map< string, map<string, map<string, vector<Participant*>*> > > >::iterator itMapZone;
+    map< string, map<string, map<string, vector<Participant*>*> > >::iterator itMapRegion;
+    map<string, map<string, vector<Participant*>*> >  ::iterator itMapDepartement;
+    map<string, vector<Participant*>*> ::iterator itMapClub;
+    
+    for(itMapPays = mapTri.begin(); itMapPays != mapTri.end(); itMapPays++)
+    {
+        //cout << "combattants pour le pays " << (*itMapPays).first << endl;
+        for(itMapZone = (*itMapPays).second.begin(); itMapZone != ((*itMapPays).second).end(); itMapZone++)
+        {
+            //cout << "la zone :" << (*itMapZone).first << endl;
+            for(itMapRegion = (*itMapZone).second.begin(); itMapRegion != ((*itMapZone).second).end(); itMapRegion++)
+            {
+                //cout << "la region :" << (*itMapRegion).first << endl;
+                for(itMapDepartement = (*itMapRegion).second.begin(); itMapDepartement != ((*itMapRegion).second).end(); itMapDepartement++)
+                {
+                    //cout << "le departement :" << (*itMapDepartement).first << endl;
+                    for(itMapClub = (*itMapDepartement).second.begin(); itMapClub != ((*itMapDepartement).second).end(); itMapClub++)
+                    {
+                        //cout << "le club :" << (*itMapClub).first << endl;
+                        for(int i=0 ; i<(*itMapClub).second->size(); i++)
+                            //(((*itMapClub).second)->at(i))->Print();
+                            listeTriee->push_back((((*itMapClub).second)->at(i)));
+                    }
+                }
+            }
+        }
+    }
+    delete combattants;
+    combattants = listeTriee;
+}
+
+void Categorie::AddParticipant(Participant *unParticipant)
 {
     combattants->push_back(unParticipant);
 }
 
-void Categorie::tirage()
+void Categorie::tirage(Participant *combattant, int indicePremierElem, int taille)
 {
-    if(taille du tableau1 = 1)
+    if(taille == 1 && tableau->at(indicePremierElem) == NULL)
     {
-        je le mets dedans
+        tableau->at(indicePremierElem) = combattant;
+        return;
     }
-    if(club appartient à tableau1)
+    
+    int itTab1; //iterateur pour le tableau
+    int clubTab1 = 0;
+    int clubTab2 = 0;
+    int deptTab1 = 0;
+    int deptTab2 = 0;
+    int regTab1 = 0;
+    int regTab2 = 0;
+    int zoneTab1 = 0;
+    int zoneTab2 = 0;
+    int paysTab1 = 0;
+    int paysTab2 = 0;
+
+    for(itTab1 = indicePremierElem; itTab1 < taille/2; itTab1++)
     {
-        je le mets dans tableau2
+        if((tableau->at(itTab1))!= NULL)
+        {
+            if(combattant->GetClub() == (tableau->at(itTab1))->GetClub())
+                clubTab1++;
+            if(combattant->GetDepartement() == (tableau->at(itTab1))->GetDepartement())
+                deptTab1++;
+            if(combattant->GetRegion() == (tableau->at(itTab1))->GetRegion())
+                regTab1++;
+            if(combattant->GetZone() == (tableau->at(itTab1))->GetZone())
+                zoneTab1++;
+            if(combattant->GetPays() == (tableau->at(itTab1))->GetPays())
+                paysTab1++;
+        }
     }
-    else
+        
+    for(itTab1 = indicePremierElem+taille/2; itTab1 < indicePremierElem+taille; itTab1++)
     {
-        je le mets dans le tableau1
+        if((tableau->at(itTab1))!= NULL)
+        {
+            if(combattant->GetClub() == (tableau->at(itTab1))->GetClub())
+                clubTab2++;
+            if(combattant->GetDepartement() == (tableau->at(itTab1))->GetDepartement())
+                deptTab2++;
+            if(combattant->GetRegion() == (tableau->at(itTab1))->GetRegion())
+                regTab2++;
+            if(combattant->GetZone() == (tableau->at(itTab1))->GetZone())
+                zoneTab2++;
+            if(combattant->GetPays() == (tableau->at(itTab1))->GetPays())
+                paysTab2++;
+        }
+    }
+    
+    if(clubTab1 == clubTab2) 
+    {
+        if(deptTab1 == deptTab2 )
+        {
+            if(regTab1 = regTab2)
+            {
+                if(zoneTab1 = zoneTab2)
+                {
+                    if(paysTab1 <= paysTab2)
+                    {
+                        tirage(combattant, indicePremierElem, taille/2);
+                    }
+                    else if (paysTab1 > paysTab2)
+                    {
+                        tirage(combattant, indicePremierElem+taille/2, taille/2);
+                    }
+                }
+                else if (zoneTab1 < zoneTab2)
+                {
+                    tirage(combattant, indicePremierElem, taille/2);
+                }
+                else if (zoneTab1 > zoneTab2)
+                {
+                    tirage(combattant, indicePremierElem+taille/2, taille/2);
+                }
+            }
+            else if (regTab1 < regTab2)
+            {
+                tirage(combattant, indicePremierElem, taille/2);
+            }
+            else if (regTab1 > regTab2)
+            {
+                tirage(combattant, indicePremierElem+taille/2, taille/2);
+            }
+        }
+        else if (deptTab1 < deptTab2)
+        {
+            tirage(combattant, indicePremierElem, taille/2);
+        }
+        else if (deptTab1 > deptTab2)
+        {
+            tirage(combattant, indicePremierElem+taille/2, taille/2);
+        }
+    }
+    else if (clubTab1 < clubTab2)
+    {
+        tirage(combattant, indicePremierElem, taille/2);
+    }
+    else if (clubTab1 > clubTab2)
+    {
+        tirage(combattant, indicePremierElem+taille/2, taille/2);
+    }
+}
+
+void Categorie::GenererTableau()
+{
+    int nbCombattants = combattants->size();
+    unsigned long res = 2;
+    while(res<nbCombattants)
+        res<<=1;
+    tableau = new vector<Participant*>(res, NULL);
+    
+    trier();
+    
+    list<Participant*>::iterator itCombattants;
+    for(itCombattants = combattants->begin(); itCombattants != combattants->end(); itCombattants++)
+    {
+        tirage((*itCombattants), 0, tableau->size());
+    }
+}
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////           TESTS          /////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Categorie::testGenererTableau()
+{
+    Participant *leo = new Participant ("Ardon", "Leo1", "M1690", "-60", Participant::N1D, "Stade Poitevin", "Vienne", "PCH");
+    Participant *leo2 = new Participant ("Ardon", "Leo2", "M1690", "-60", Participant::N1D, "Stade Poitevin", "Vienne", "PCH");
+    Participant *leo3 = new Participant ("Ardon", "Leo3", "M1690", "-60", Participant::N1D, "Stade Poitevin", "Vienne", "PCH");
+    bool error = false;
+    
+    this->AddParticipant(leo); //ajout d'un combattant
+    this->GenererTableau();
+    if(tableau->size() != 2)
+    {
+        cout << "nombre combattants: " << combattants->size() << endl;
+        cout << "taille tableau: " << tableau->size() << endl;
+        cout << "Erreur pour un combattant" << endl;
+        error = true;
+    }
+    
+    this->AddParticipant(leo2); //ajout d'un deuxième combattant
+    this->GenererTableau();
+    if(tableau->size() != 2)
+    {
+        cout << "nombre combattants: " << combattants->size() << endl;
+        cout << "taille tableau: " << tableau->size() << endl;
+        cout << "Erreur pour deux combattants" << endl;
+        error = true;
+    }
+    
+    this->AddParticipant(leo3); //ajout d'un troisième combattant
+    this->GenererTableau();
+    if(tableau->size() != 4)
+    {
+        cout << "nombre combattants: " << combattants->size() << endl;
+        cout << "taille tableau: " << tableau->size() << endl;
+        cout << "Erreur pour 3 combattants" << endl;
+        error = true;
+    }
+    
+    /*for(int i=0; i<61; i++) //ajout de 61 autres combattants => 61 + 3 = 64
+    {
+        Participant *leoi = new Participant ("Ardon", "Leo", "M1690", "-60", Participant::N1D, "Stade Poitevin", "Vienne", "PCH");
+        this->AddParticipant(leoi);
+    }
+    this->GenererTableau();
+    if(tableau->size() != 64)
+    {
+        cout << "nombre combattants: " << combattants->size() << endl;
+        cout << "taille tableau: " << tableau->size() << endl;
+        cout << "Erreur pour 64 combattants" << endl;
+        error = true;
+    }*/
+    
+    if(!error)
+    {
+        cout << "test réussit !" << endl;
+        this->PrintTableau();
     }
 }
 

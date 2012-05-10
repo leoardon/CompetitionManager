@@ -13,6 +13,7 @@
 //--------------------------------------------------- Interfaces utilisées
 #include "Participant.hpp"
 #include <list>
+#include <vector>
 //------------------------------------------------------------- Constantes
 
 //------------------------------------------------------------------ Types
@@ -28,22 +29,37 @@
 class Categorie {
     
 public:
+    //enum
     typedef enum {M, F} tSexe;
     typedef enum {Benjamin, Minime, Cadet, Junior, Senior} tAge;
+    
+    //constructeur
     Categorie(string unPoids, tSexe unSexe, tAge unAge);
+    
+    //destructeur
     ~Categorie();
-    void Print();
-    void addParticipant(Participant *unParticipant);
+    
+    //méthodes
+    void PrintCombattants();
+    void AddParticipant(Participant *unParticipant);
+    void GenererTableau();
+    void PrintTableau();
+    
+    //TESTS//
+    void testGenererTableau();
 
     
 private:
-    void tirage();
+    //méthodes
+    void tirage(Participant *combattant, int indicePremierElem, int taille);
+    void trier();
     
     //attributs
     string poids;
     tSexe sexe;
     tAge age;
     list<Participant*> *combattants;
+    vector<Participant*> *tableau;
     
 };
 

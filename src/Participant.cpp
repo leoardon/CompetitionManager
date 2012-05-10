@@ -42,7 +42,7 @@ using namespace std;
 //{
 //} //----- fin de Nom
 
-Participant::Participant (string unNom, string unPrenom, string unNoLicence, string unPoids, tGrade unGrade, string unClub, string unDepartement, string unRegion) : nom(unNom), prenom(unPrenom), noLicence(unNoLicence), poids(unPoids), grade(unGrade), club(unClub), departement(unDepartement), region(unRegion), classement(0)
+Participant::Participant (string unNom, string unPrenom, string unNoLicence, string unPoids, tGrade unGrade, string unClub, string unDepartement, string unRegion, string uneZone, string unPays) : nom(unNom), prenom(unPrenom), noLicence(unNoLicence), poids(unPoids), grade(unGrade), club(unClub), departement(unDepartement), region(unRegion), classement(0), zone(uneZone), pays(unPays)
 {
 } //----- fin de Constructeur
 
@@ -58,5 +58,36 @@ void Participant::Print()
     cout << "region: " << region << " departement: " << departement << " club: " << club << endl;
     cout << "classement: " << classement << endl;
 }
+
+string Participant::GetClub()
+{
+    return club;
+}
+
+string Participant::GetDepartement()
+{
+    return departement;
+}
+
+string Participant::GetRegion()
+{
+    return region;
+}
+
+string Participant::GetZone()
+{
+    return zone;
+}
+
+string Participant::GetPays()
+{
+    return pays;
+}
+
+string Participant::GetNom()
+{
+    return nom+" "+prenom;
+}
+
 
 
