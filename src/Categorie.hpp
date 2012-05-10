@@ -12,6 +12,7 @@
 /////////////////////////////////////////////////////////////////  INCLUDE
 //--------------------------------------------------- Interfaces utilisées
 #include "Participant.hpp"
+#include "Combat.hpp"
 #include <list>
 #include <vector>
 //------------------------------------------------------------- Constantes
@@ -63,6 +64,8 @@ private:
     tAge age;
     list<Participant*> *combattants;
     vector<Participant*> *tableau;
+    vector<list<Combat*> > *combats;
+    int nbTours;
     
 };
 
