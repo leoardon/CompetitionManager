@@ -135,11 +135,16 @@ void Categorie::AddParticipant(Participant *unParticipant)
     combattants->push_back(unParticipant);
 }
 
-void Categorie::tirage(Participant *combattant, int indicePremierElem, int taille)
+void Categorie::tirage(Participant *combattant, int indicePremierElem, int taille, bool &ok)
 {
-    if(taille == 1 && tableau->at(indicePremierElem) == NULL)
+    if(taille == 1)
     {
-        tableau->at(indicePremierElem) = combattant;
+        if(tableau->at(indicePremierElem)== NULL)
+        {
+            tableau->at(indicePremierElem) = combattant;
+        }
+        else
+            ok = false;
         return;
     }
     
@@ -189,63 +194,122 @@ void Categorie::tirage(Participant *combattant, int indicePremierElem, int taill
         }
     }
     
-    if(clubTab1 == clubTab2) 
+    if(clubTab1 == clubTab2)
     {
         if(deptTab1 == deptTab2 )
         {
-            if(regTab1 = regTab2)
+            if(regTab1 == regTab2)
             {
-                if(zoneTab1 = zoneTab2)
+                if(zoneTab1 == zoneTab2)
                 {
-                    if(paysTab1 <= paysTab2)
+                    if(paysTab1 < paysTab2)
                     {
-                        tirage(combattant, indicePremierElem, taille/2);
+                        premierDemiTableau(combattant, indicePremierElem, taille, ok);
+                        if(!ok)
+                            return;
                     }
                     else if (paysTab1 > paysTab2)
                     {
-                        tirage(combattant, indicePremierElem+taille/2, taille/2);
+                        secondDemiTableau(combattant, indicePremierElem, taille, ok);
+                        if(!ok)
+                            return;
+                    }
+                    else if( paysTab1 == paysTab2)
+                    {
+                        int choix = rand() % 2 + 1;
+                        if(choix == 1)
+                        {
+                            premierDemiTableau(combattant, indicePremierElem, taille, ok);
+                            if(!ok)
+                                return;
+                        }
+                        else
+                        {
+                            secondDemiTableau(combattant, indicePremierElem, taille, ok);
+                            if(!ok)
+                                return;
+                        }
                     }
                 }
                 else if (zoneTab1 < zoneTab2)
                 {
-                    tirage(combattant, indicePremierElem, taille/2);
+                    premierDemiTableau(combattant, indicePremierElem, taille, ok);
+                    if(!ok)
+                        return;
                 }
                 else if (zoneTab1 > zoneTab2)
                 {
-                    tirage(combattant, indicePremierElem+taille/2, taille/2);
+                    secondDemiTableau(combattant, indicePremierElem, taille, ok);
+                    if(!ok)
+                        return;
                 }
             }
             else if (regTab1 < regTab2)
             {
-                tirage(combattant, indicePremierElem, taille/2);
+                premierDemiTableau(combattant, indicePremierElem, taille, ok);
+                if(!ok)
+                    return;
             }
             else if (regTab1 > regTab2)
             {
-                tirage(combattant, indicePremierElem+taille/2, taille/2);
+                secondDemiTableau(combattant, indicePremierElem, taille, ok);
+                if(!ok)
+                    return;
             }
         }
         else if (deptTab1 < deptTab2)
         {
-            tirage(combattant, indicePremierElem, taille/2);
+            premierDemiTableau(combattant, indicePremierElem, taille, ok);
+            if(!ok)
+                return;
         }
         else if (deptTab1 > deptTab2)
         {
-            tirage(combattant, indicePremierElem+taille/2, taille/2);
+            secondDemiTableau(combattant, indicePremierElem, taille, ok);
+            if(!ok)
+                return;
         }
     }
     else if (clubTab1 < clubTab2)
     {
-        tirage(combattant, indicePremierElem, taille/2);
+        premierDemiTableau(combattant, indicePremierElem, taille, ok);
+        if(!ok)
+            return;
     }
     else if (clubTab1 > clubTab2)
     {
-        tirage(combattant, indicePremierElem+taille/2, taille/2);
+        secondDemiTableau(combattant, indicePremierElem, taille, ok);
+        if(!ok)
+            return;
     }
+}
+
+void Categorie::premierDemiTableau(Participant* combattant, int indicePremierElem, int taille, bool &ok)
+{
+    tirage(combattant, indicePremierElem, taille/2, ok);
+    if(!ok)
+    {
+        ok = true;
+        tirage(combattant, indicePremierElem+taille/2, taille/2, ok);
+    }
+    return;
+}
+
+void Categorie::secondDemiTableau(Participant* combattant, int indicePremierElem, int taille, bool &ok)
+{
+    tirage(combattant, indicePremierElem+taille/2, taille/2, ok);
+    if(!ok)
+    {
+        ok = true;
+        tirage(combattant, indicePremierElem, taille/2, ok);
+    }
+    return;
 }
 
 void Categorie::GenererTableau()
 {
     int nbCombattants = combattants->size();
+    bool ok = true;
     unsigned long res = 2;
     while(res<nbCombattants)
         res<<=1;
@@ -256,7 +320,7 @@ void Categorie::GenererTableau()
     list<Participant*>::iterator itCombattants;
     for(itCombattants = combattants->begin(); itCombattants != combattants->end(); itCombattants++)
     {
-        tirage((*itCombattants), 0, tableau->size());
+        tirage((*itCombattants), 0, tableau->size(), ok);
     }
 }
 

@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 {
     
     Participant *leo = new Participant ("Ardon", "Leo", "M1690", "-60", Participant::N1D, "Stade Poitevin", "Vienne", "PCH");
-    Participant *leo6 = new Participant ("Ardon", "Leo4", "M1690", "-60", Participant::N1D, "Le Plessis Robinson Judo", "Hauts de Seine", "IDF", "RegionParisienne");
+    Participant *leo6 = new Participant ("Ardon", "Leo6", "M1690", "-60", Participant::N1D, "Le Plessis Robinson Judo", "Hauts de Seine", "IDF", "RegionParisienne");
     Participant *leo2 = new Participant ("Ardon", "Leo2", "M1690", "-60", Participant::N1D, "USJ86", "Vienne", "PCH");
     Participant *leo3 = new Participant ("Ardon", "Leo3", "M1690", "-60", Participant::N1D, "Stade Poitevin", "Vienne", "PCH");
     Participant *leo4 = new Participant ("Ardon", "Leo4", "M1690", "-60", Participant::N1D, "Stade couronnais", "Charente", "PCH");

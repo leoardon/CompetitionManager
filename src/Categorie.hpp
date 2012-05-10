@@ -51,7 +51,10 @@ public:
     
 private:
     //méthodes
-    void tirage(Participant *combattant, int indicePremierElem, int taille);
+    void tirage(Participant *combattant, int indicePremierElem, int taille, 
+        bool &ok);
+    void premierDemiTableau(Participant* combattant, int indicePremierElem, int taille, bool &ok);
+    void secondDemiTableau(Participant* combattant, int indicePremierElem, int taille, bool &ok);
     void trier();
     
     //attributs
