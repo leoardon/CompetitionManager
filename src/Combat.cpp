@@ -52,22 +52,22 @@ Combat::~Combat ()
 {
 } //----- fin de Destructeur
 
-void SetVainqueur(Participant* unCombattant)
+void Combat::SetVainqueur(Participant* unCombattant)
 {
     vainqueur = unCombattant;
 }
 
-Participant* GetCombattantR()
+Participant* Combat::GetCombattantR()
 {
     return combattantR;
 }
 
-Participant* GetCombattantB()
+Participant* Combat::GetCombattantB()
 {
     return combattantB;
 }
 
-Participant* GetVainqueur()
+Participant* Combat::GetVainqueur()
 {
     return vainqueur;
 }

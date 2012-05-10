@@ -83,7 +83,6 @@ void Categorie::trier()
     list<Participant*> *listeTriee = new list<Participant*>(); 
     list<Participant*>::iterator it;
     map<string, map<string, map< string, map<string, map<string, vector<Participant*>*> > > > > mapTri;
-    map<string, vector<Participant*>*> mapClub;
 
     for(it = combattants->begin(); it != combattants->end(); it++)
     {
@@ -314,6 +313,7 @@ void Categorie::GenererTableau()
     while(res<nbCombattants)
         res<<=1;
     tableau = new vector<Participant*>(res, NULL);
+    nbTours = log2(res);
     
     trier();
     

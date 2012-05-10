@@ -1,5 +1,5 @@
 SRC:= ../src/*.cpp
-OBJ:= main.o Participant.o Categorie.o
+OBJ:= main.o Participant.o Categorie.o Combat.o
 
 all: judo
 
