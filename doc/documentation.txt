@@ -1,0 +1,23 @@
+Categorie:
+	- poids
+	- sexe
+	- list<Participant>
+	
+	
+Participant:
+	- nom
+	- prenom
+	- poids
+	- n°licence
+	- grade
+	- club
+	- departement
+	- region
+	- classement
+	
+Tableau:
+	- Categorie
+	- list<Combat>
+	
+- quand j'ai fini la liste des combats je la recalcule jusqu'à ce que la finale soit faite
+- 1ere iteration sans repechage
