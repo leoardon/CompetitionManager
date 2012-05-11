@@ -42,4 +42,5 @@ int main(int argc, char** argv)
     cate->AddParticipant(leo3);
     cate->GenererTableau();
     cate->PrintTableau();
+    cate->PrintCombats();
 }

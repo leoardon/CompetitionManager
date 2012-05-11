@@ -314,6 +314,7 @@ void Categorie::GenererTableau()
         res<<=1;
     tableau = new vector<Participant*>(res, NULL);
     nbTours = log2(res);
+    combats = new vector<list<Combat*> >(nbTours, list<Combat*>());
     
     trier();
     
@@ -322,6 +323,62 @@ void Categorie::GenererTableau()
     {
         tirage((*itCombattants), 0, tableau->size(), ok);
     }
+    
+    for(int i = 0; i < tableau->size(); i+=2)
+    {
+        Combat* combat;
+        if(tableau->at(i) == NULL)
+        {
+            //cout << "tableau->at(i) == NULL" << endl;
+            combat = new Combat(NULL, tableau->at(i+1));
+            combat->SetVainqueur(combat->GetCombattantB());
+        }
+        else if(tableau->at(i+1) == NULL)
+        {
+            //cout << "tableau->at(i+1) == NULL" << endl;
+            combat = new Combat(tableau->at(i), NULL);
+            combat->SetVainqueur(combat->GetCombattantR());
+        }
+        else
+        {
+            //cout << "OK pas de NULL" << endl;
+            combat = new Combat(tableau->at(i), tableau->at(i+1));
+        }
+        combats->at(0).push_back(combat);
+    }
+    nbTours--;
+}
+
+void Categorie::PrintCombats()
+{
+    list<Combat*>::iterator it;
+    for(it = combats->at(0).begin(); it != combats->at(0).end(); it++)
+    {
+        if((*it)->GetCombattantR() != NULL)
+            cout << (*it)->GetCombattantR()->GetNom();
+        else
+            cout << "VIDE";
+        cout << " vs "; 
+        if((*it)->GetCombattantB() != NULL)
+            cout << (*it)->GetCombattantB()->GetNom();
+        else
+            cout << "VIDE";
+        cout << endl;
+    }
+}
+
+void Categorie::GenererTour()
+{
+    if(nbTours == 0)
+        return;
+    list<Combat*>::iterator itcombats;
+    int indice = nbTours - combats->size();
+    for(itcombats=combats->at(indice).begin(); itcombats != combats->at(indice).end(); advance(itcombats,2))
+    {
+        Combat *combat = new Combat((*itcombats)->GetVainqueur(), (*(itcombats++))->GetVainqueur());
+        combats->at(indice+1).push_back(combat);
+    }
+    nbTours--;
 }
 
 

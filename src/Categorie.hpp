@@ -45,6 +45,8 @@ public:
     void AddParticipant(Participant *unParticipant);
     void GenererTableau();
     void PrintTableau();
+    void GenererTour();
+    void PrintCombats();
     
     //TESTS//
     void testGenererTableau();
