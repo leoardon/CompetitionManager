@@ -46,7 +46,9 @@ public:
     void GenererTableau();
     void PrintTableau();
     void GenererTour();
+    void EffectuerTour();
     void PrintCombats();
+    bool EstTermine();
     
     //TESTS//
     void testGenererTableau();

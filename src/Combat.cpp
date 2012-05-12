@@ -46,6 +46,7 @@ using namespace std;
 
 Combat::Combat(Participant* unCombattantR, Participant* unCombattantB): combattantR(unCombattantR), combattantB(unCombattantB), scoreR(0), scoreB(0)
 {
+    vainqueur = NULL;
 } //----- fin de Constructeur
 
 Combat::~Combat ()

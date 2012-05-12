@@ -42,5 +42,13 @@ int main(int argc, char** argv)
     cate->AddParticipant(leo3);
     cate->GenererTableau();
     cate->PrintTableau();
-    cate->PrintCombats();
+    cout << "Tour 1" << endl;
+    cate->EffectuerTour();
+    int i=2;
+    while(!(cate->EstTermine()))
+    {
+        cout << "Tour " << i++ << endl;
+        cate->GenererTour();
+        cate->EffectuerTour();
+    }
 }

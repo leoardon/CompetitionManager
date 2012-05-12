@@ -346,7 +346,6 @@ void Categorie::GenererTableau()
         }
         combats->at(0).push_back(combat);
     }
-    nbTours--;
 }
 
 void Categorie::PrintCombats()
@@ -372,13 +371,55 @@ void Categorie::GenererTour()
     if(nbTours == 0)
         return;
     list<Combat*>::iterator itcombats;
-    int indice = nbTours - combats->size();
-    for(itcombats=combats->at(indice).begin(); itcombats != combats->at(indice).end(); advance(itcombats,2))
+    int indice = combats->size() - nbTours - 1;
+    for(itcombats=combats->at(indice).begin(); itcombats != combats->at(indice).end(); itcombats++)
     {
-        Combat *combat = new Combat((*itcombats)->GetVainqueur(), (*(itcombats++))->GetVainqueur());
+        Combat *combat = new Combat((*itcombats)->GetVainqueur(), (*(++itcombats))->GetVainqueur());
         combats->at(indice+1).push_back(combat);
     }
+}
+
+void Categorie::EffectuerTour()
+{
+    if(nbTours == 0)
+        return;
+    list<Combat*>::iterator itcombats;
+    int indice = combats->size() - nbTours;
+    for(itcombats = combats->at(indice).begin(); itcombats != combats->at(indice).end(); itcombats++)
+    {
+        if((*itcombats)->GetVainqueur() == NULL)
+        {
+            char v;
+            string nomR = (*itcombats)->GetCombattantR()->GetNom();
+            string nomB = (*itcombats)->GetCombattantB()->GetNom();
+            cout << "combat: " << nomR << " vs " << nomB << endl;
+            bool error = false;
+            do{
+                cout << "Indiquez le vainqueur (R/B) :";
+                cin >> v;
+                if(v=='r' || v=='R')
+                {
+                    cout << "vainqueur rouge" << endl;
+                    (*itcombats)->SetVainqueur((*itcombats)->GetCombattantR());
+                    error = false;
+                }
+                else if(v=='b' || v=='B')
+                {
+                    cout << "vainqueur blanc" << endl;
+                    (*itcombats)->SetVainqueur((*itcombats)->GetCombattantB());
+                    error =false;
+                }
+                else
+                    error = true;
+            }while(error);
+        }
+    }
     nbTours--;
+}
+
+bool Categorie::EstTermine()
+{
+    return (nbTours==0);
 }
 
 
