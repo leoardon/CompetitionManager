@@ -86,6 +86,7 @@ void Categorie::trier()
 
     for(it = combattants->begin(); it != combattants->end(); it++)
     {
+        //je regarde si une occurence d'un des critères de classement existe déjà sinon j'initialise le vecteur.
         if(mapTri.find((*it)->GetPays()) == mapTri.end() || mapTri[(*it)->GetPays()].find((*it)->GetZone()) == mapTri[(*it)->GetPays()].end()
            || ((mapTri[(*it)->GetPays()])[(*it)->GetZone()]).find((*it)->GetRegion()) == ((mapTri[(*it)->GetPays()])[(*it)->GetZone()]).end()
            || (((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()]).find((*it)->GetDepartement()) == (((mapTri[(*it)->GetPays()])[(*it)->GetZone()])[(*it)->GetRegion()]).end()
@@ -329,19 +330,16 @@ void Categorie::GenererTableau()
         Combat* combat;
         if(tableau->at(i) == NULL)
         {
-            //cout << "tableau->at(i) == NULL" << endl;
             combat = new Combat(NULL, tableau->at(i+1));
             combat->SetVainqueur(combat->GetCombattantB());
         }
         else if(tableau->at(i+1) == NULL)
         {
-            //cout << "tableau->at(i+1) == NULL" << endl;
             combat = new Combat(tableau->at(i), NULL);
             combat->SetVainqueur(combat->GetCombattantR());
         }
         else
         {
-            //cout << "OK pas de NULL" << endl;
             combat = new Combat(tableau->at(i), tableau->at(i+1));
         }
         combats->at(0).push_back(combat);
