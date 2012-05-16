@@ -1,16 +1,5 @@
-/*
- * vim:ts=2:sw=2:et:ai
- */
-
 body {
   font: 13px Arial; margin: 0.5em 1em;
-}
-
-#logo {
-  background: url('logo.png') no-repeat ;
-  width: 160px;
-  height: 40px;
-  float: left;
 }
 
 td {
@@ -34,13 +23,18 @@ td {
   margin: 0.5em 0;
 }
 
+#add {
+  width: 1.5%;
+  height: 1.5%;
+}
+
 #error {
   background: #c44;
   color: white;
   font-weight: bold;
 }
 
-#content, .menu-item-selected, .chat-title, .chat-content {
+#content, .menu-item-selected, .competition-title, .competition-content {
   background: #c3d9ff;
 }
 
@@ -50,15 +44,15 @@ td {
   padding: 1em;
 }
 
-.chat-title {
+.competition-title {
   padding: 1px 1ex;
 }
 
-.chat-content {
+.competition-content {
  padding: 1ex;
 }
 
-.chat-window {
+.competition-window {
 }
 
 .message-row {
@@ -70,17 +64,8 @@ td {
   color: #484;
 }
 
-.message-user {
-  margin-left: 0.5em;
-  font-weight: bold;
-}
-
 .message-text {
   margin-left: 0.5em;
-}
-
-.message-user-server {
-  color: purple;
 }
 
 .message-text-server {
@@ -96,14 +81,6 @@ td {
   margin-top: 1em;
   min-width: 7em;
   float: left;
-}
-
-#footer {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  color: #ccc;
-  padding: 0.5em;
 }
 
 .section {

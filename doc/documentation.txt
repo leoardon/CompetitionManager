@@ -25,3 +25,15 @@ Tableau:
 pour le tirage:
 - vérification sur le club, sur le département, sur la région, sur le classement
 -preclassement par club puis par départ puis par region
+
+IHM:
+list<Categorie>
+	-modifier
+		-list<Combattant>
+			-ajouter
+			-supprimer
+			-genererTableau
+	-commencer
+		-affichageTableau
+		-combatSuivant
+			-ChoisirVainqueur
