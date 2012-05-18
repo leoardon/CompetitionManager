@@ -9,6 +9,7 @@
 #include "Participant.hpp"
 #include "Categorie.hpp"
 #include "categories.hpp"
+#include "Server.hpp"
 
 #include <iostream>
 using namespace std;
@@ -41,7 +42,7 @@ int main(int argc, char** argv)
     cate->AddParticipant(leo4);
     cate->AddParticipant(leo3);
     cate->GenererTableau();
-    cate->PrintTableau();
+    /*cate->PrintTableau();
     cout << "Tour 1" << endl;
     cate->EffectuerTour();
     int i=2;
@@ -50,5 +51,7 @@ int main(int argc, char** argv)
         cout << "Tour " << i++ << endl;
         cate->GenererTour();
         cate->EffectuerTour();
-    }
+    }*/
+    
+    Server* serverJudo = Server::GetInstance();
 }

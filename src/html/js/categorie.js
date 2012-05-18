@@ -132,7 +132,6 @@ function getPoids()
          return;
     //ajax pour recupérer les cate correspondant aux choix faits
     var unSexe = $('input:radio[name=sexe]:checked').val();
-alert(unSexe);
     var unAge = $('#categorie-age').val();
     $.ajax({
         url: '/ajax/get_categories',
@@ -141,6 +140,13 @@ alert(unSexe);
         cache: false,
         dataType: 'html',
         success: function (data) {
+        	var obj = jQuery.parseJSON(data);
+        	var select = $('#categorie-poids');
+        	select.empty();
+        	select.append(new Option("--Selection--", 'selection', true, false));
+        	$.each(obj.cate, function(val, poids) {
+    			select.append(new Option(poids, poids, true, false));
+			});
         },
         error: error
     });

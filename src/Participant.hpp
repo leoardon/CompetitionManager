@@ -29,7 +29,7 @@ class Participant {
     
 public:
     typedef enum {Bla, BJ, J, JO, O, OV, V, Ble, M, N1D, N2D, N3D, N4D, N5D, N6D, N7D, N8D, N9D, N10D} tGrade;
-    Participant (string unNom, string unPrenom, string unNoLicence, string unPoids, tGrade unGrade, string unClub, string unDepartement, string unRegion, string uneZone = "SO", string unPays = "FR");
+    Participant (string unNom, string unPrenom, string unNoLicence, string unPoids, tGrade unGrade, string unClub, string unDepartement, string unRegion, string uneZone = "SO", string unPays = "FR", int unClassement = 0);
     ~Participant();
     void Print();
     string GetClub();

@@ -10,15 +10,19 @@
  * Mongoose code.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <string.h>
-#include <time.h>
-#include <stdarg.h>
+#include <iostream>
+using namespace std;
+#include <cstdlib>
+#include <cassert>
+#include <cstring>
+#include <ctime>
+#include <cstdarg>
 #include <pthread.h>
+#include <vector>
+#include <sstream>
 
-#include "mongoose.h"
+#include "lib/mongoose/mongoose.h"
+#include "categories.hpp"
 
 #define MAX_USER_LEN  20
 #define MAX_CATEGORIE_LEN  100
@@ -41,6 +45,8 @@ struct categorie {
 
 static struct categorie categories[MAX_CATEGORIES];  // Ringbuffer for categories
 static long last_categorie_id;
+static vector<vector<float> > masculin;
+static vector<vector<float> > feminin;
 
 // Protects categories, sessions, last_categorie_id
 static pthread_rwlock_t rwlock = PTHREAD_RWLOCK_INITIALIZER;
@@ -99,12 +105,62 @@ static int handle_jsonp(struct mg_connection *conn,
   return cb[0] == '\0' ? 0 : 1;
 }
 
+static void initialisation()
+{
+
+    float MBenjamin[] = {Mbenjamin_30_H,Mbenjamin_34_H,Mbenjamin_38_H,Mbenjamin_42_H,Mbenjamin_46_H,Mbenjamin_50_H,Mbenjamin_60_H,Mbenjamin_66_H,Mbenjamin_PLUS66_L};
+    vector<float> VMBenjamin (MBenjamin, MBenjamin + sizeof(MBenjamin) / sizeof(int));
+
+
+    float FBenjamin[] = {Fbenjamin_32_H,Fbenjamin_36_H,Fbenjamin_40_H,Fbenjamin_44_H,Fbenjamin_48_H,Fbenjamin_52_H,Fbenjamin_57_H,Fbenjamin_63_H,Fbenjamin_PLUS63_L};
+    vector<float> VFBenjamin (FBenjamin, FBenjamin + sizeof(FBenjamin) / sizeof(int));
+
+    float MMinime[] = {Mminime_34_H,Mminime_38_H,Mminime_42_H,Mminime_46_H,Mminime_50_H,Mminime_55_H,Mminime_60_H,Mminime_66_H, Mminime_73_H,Mminime_PLUS73_L};
+    vector<float> VMMinime (MMinime, MMinime + sizeof(MMinime) / sizeof(int));
+    
+    float FMinime[] = {Fminime_36_H,Fminime_40_H,Fminime_44_H,Fminime_48_H,Fminime_52_H,Fminime_57_H,Fminime_63_H,Fminime_70_H,Fminime_PLUS70_L};
+    vector<float> VFMinime (FMinime, FMinime + sizeof(FMinime) / sizeof(int));
+    
+    float MCadet[] = {Mcadet_46_H,Mcadet_50_H,Mcadet_55_H,Mcadet_60_H,Mcadet_66_H,Mcadet_73_H,Mcadet_81_H,Mcadet_90_H,Mcadet_PLUS90_L};
+    vector<float> VMCadet (MCadet, MCadet + sizeof(MCadet) / sizeof(int));
+    
+    float FCadet[] = {Fcadet_40_H,Fcadet_44_H,Fcadet_48_H,Fcadet_52_H,Fcadet_57_H,Fcadet_63_H,Fcadet_70_H,Fcadet_PLUS70_L};
+    vector<float> VFCadet (FCadet, FCadet + sizeof(FCadet) / sizeof(int));
+    
+    float MJunior[] = {Mjunior_55_H,Mjunior_60_H,Mjunior_66_H,Mjunior_73_H,Mjunior_81_H,Mjunior_90_H,Mjunior_100_H,Mjunior_PLUS100_L};
+    vector<float> VMJunior (MJunior, MJunior + sizeof(MJunior) / sizeof(int));
+    
+    float FJunior[] = {Fjunior_44_H,Fjunior_48_H,Fjunior_52_H,Fjunior_57_H,Fjunior_63_H,Fjunior_70_H,Fjunior_78_H,Fjunior_PLUS78_L};
+    vector<float> VFJunior (FJunior, FJunior + sizeof(FJunior) / sizeof(int));
+    
+    float MSenior[] = {Msenior_60_H,Msenior_66_H,Msenior_73_H,Msenior_81_H,Msenior_90_H,Msenior_100_H,Msenior_PLUS100_L};
+    vector<float> VMSenior (MSenior, MSenior + sizeof(MSenior) / sizeof(int));
+    
+    float FSenior[] = {Fsenior_48_H,Fsenior_52_H,Fsenior_57_H,Fsenior_63_H,Fsenior_70_H,Fsenior_78_H,Fsenior_PLUS78_L};
+    vector<float> VFSenior (FSenior, FSenior + sizeof(FSenior) / sizeof(int));
+
+    masculin.push_back(VMBenjamin);
+    masculin.push_back(VMMinime);
+    masculin.push_back(VMCadet);
+    masculin.push_back(VMJunior);
+    masculin.push_back(VMSenior);
+    
+    feminin.push_back(VFBenjamin);
+    feminin.push_back(VFMinime);
+    feminin.push_back(VFCadet);
+    feminin.push_back(VFJunior);
+    feminin.push_back(VFSenior);
+}
+
+
 // A handler for the /ajax/get_categories endpoint.
 // Return a list of categories with ID greater than requested.
 static void ajax_get_categories(struct mg_connection *conn,
                               const struct mg_request_info *request_info) {
-  char age[32], sexe[32], *json;
-  int is_jsonp;
+  char age[32], sexe[32];
+  int is_jsonp, indice;
+  vector<vector<float> > *vecteur;
+  string json = "";
 
   mg_printf(conn, "%s", ajax_reply_start);
   is_jsonp = handle_jsonp(conn, request_info);
@@ -115,11 +171,53 @@ static void ajax_get_categories(struct mg_connection *conn,
     free(json);
   }*/
   get_qsvar(request_info, "age", age, sizeof(age));
-  printf("age: %s\n",age);
-    
-    
   get_qsvar(request_info, "sexe", sexe, sizeof(sexe));
-  printf("sexe: %s\n",sexe);
+    
+    cout << "age :" << age << endl;
+    cout << "sexe :" << sexe << endl;
+  if (strncmp("homme", sexe, sizeof(sexe))==0)
+      vecteur = &masculin;
+  else
+      vecteur = &feminin;
+    
+    if (strncmp("benjamins", age, sizeof(age))==0) 
+    {
+        indice = 0;
+    }else if(strncmp("minimes", age, sizeof(age))==0) 
+    {
+        indice = 1;
+    }else if(strncmp("cadets", age, sizeof(age))==0) 
+    {
+        indice = 2;
+    }else if(strncmp("juniors", age, sizeof(age))==0) 
+    {
+        indice = 3;
+    }else //(age == "seniors")
+    {
+        indice = 4;
+    }
+  
+  ostringstream out;
+  json = "{\"cate\":[";
+  for(unsigned long i=0; i<vecteur->at(indice).size()-1; i++)
+  {
+        out << vecteur->at(indice)[i];
+        json += "\"";
+        json += out.str();
+        json += "\"";
+        json += ",";
+        out.str("");
+  }
+  out << vecteur->at(indice)[vecteur->at(indice).size()-1];
+  json +="\"+";
+  json += out.str();
+  json += "\"";
+  json +="]}";
+    
+  
+  mg_printf(conn, "%s\n", json.c_str());
+  
+  printf("retour: %s\n",json.c_str());
 
   if (is_jsonp) {
     mg_printf(conn, "%s", ")");
@@ -171,7 +269,7 @@ static void ajax_send_categorie(struct mg_connection *conn,
 static void *event_handler(enum mg_event event,
                            struct mg_connection *conn,
                            const struct mg_request_info *request_info) {
-  void *processed = "yes";
+  void *processed = (void*)"yes";
 
   if (event == MG_NEW_REQUEST) {
     if (strcmp(request_info->uri, "/ajax/get_categories") == 0) {
@@ -197,6 +295,8 @@ static const char *options[] = {
 };
 
 int main(void) {
+    
+  initialisation();
   struct mg_context *ctx;
 
   // Initialize random number generator. It will be used later on for

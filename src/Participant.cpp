@@ -42,7 +42,7 @@ using namespace std;
 //{
 //} //----- fin de Nom
 
-Participant::Participant (string unNom, string unPrenom, string unNoLicence, string unPoids, tGrade unGrade, string unClub, string unDepartement, string unRegion, string uneZone, string unPays) : nom(unNom), prenom(unPrenom), noLicence(unNoLicence), poids(unPoids), grade(unGrade), club(unClub), departement(unDepartement), region(unRegion), classement(0), zone(uneZone), pays(unPays)
+Participant::Participant (string unNom, string unPrenom, string unNoLicence, string unPoids, tGrade unGrade, string unClub, string unDepartement, string unRegion, string uneZone, string unPays, int unClassement) : nom(unNom), prenom(unPrenom), noLicence(unNoLicence), poids(unPoids), grade(unGrade), club(unClub), departement(unDepartement), region(unRegion), classement(unClassement), zone(uneZone), pays(unPays)
 {
 } //----- fin de Constructeur
 

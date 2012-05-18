@@ -118,7 +118,7 @@ void Categorie::trier()
                     for(itMapClub = (*itMapDepartement).second.begin(); itMapClub != ((*itMapDepartement).second).end(); itMapClub++)
                     {
                         //cout << "le club :" << (*itMapClub).first << endl;
-                        for(int i=0 ; i<(*itMapClub).second->size(); i++)
+                        for(unsigned int i=0 ; i<(*itMapClub).second->size(); i++)
                             //(((*itMapClub).second)->at(i))->Print();
                             listeTriee->push_back((((*itMapClub).second)->at(i)));
                     }
@@ -308,7 +308,7 @@ void Categorie::secondDemiTableau(Participant* combattant, int indicePremierElem
 
 void Categorie::GenererTableau()
 {
-    int nbCombattants = combattants->size();
+    unsigned long nbCombattants = combattants->size();
     bool ok = true;
     unsigned long res = 2;
     while(res<nbCombattants)
@@ -325,7 +325,7 @@ void Categorie::GenererTableau()
         tirage((*itCombattants), 0, tableau->size(), ok);
     }
     
-    for(int i = 0; i < tableau->size(); i+=2)
+    for(unsigned int i = 0; i < tableau->size(); i+=2)
     {
         Combat* combat;
         if(tableau->at(i) == NULL)
